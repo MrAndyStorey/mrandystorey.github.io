@@ -1,10 +1,10 @@
-# Welcome to mrandystorey.github.io
+# Welcome
 
 After years working in IT, I am now training to be a Computer Science Teacher with [WSTP](https://www.wessexschools.uk/).
 
-I’ve had a varied career, in both the public and private sector, with numerous technical and social skills that I feel are transferable into teaching.  
+I’ve enjoyed a varied career, in both the public and private sector, with numerous technical and soft skills that I feel are transferable into teaching.  
 
-Here's hoping that I can inspire pupils into digital careers which I myself have gained so much from.
+Here's hoping that I can inspire pupils into digital careers that I have gained so much from.
 
 ## Links
 
