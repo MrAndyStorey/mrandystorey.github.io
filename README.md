@@ -19,4 +19,4 @@ Incredibly, inbetween Open University assignments, full time work and a young fa
 
 The [Art of the Jersey](https://www.amazon.co.uk/Art-Jersey-Celebration-Cycling-Racing/dp/1784721662/) celebrates the jersey’s changing styles and trends and features over 200 jerseys with each one having a a photograph along with a key information telling the jersey's story.
 
-![Art of the Jersey Book](assets/art-of-the-jersey-book.jpg)
+![Art of the Jersey Book](https://mrandystorey.github.io/docs/assets/images/art-of-the-jersey-book.jpg)
