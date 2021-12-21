@@ -15,8 +15,8 @@ Below is a list of social media that I use in addition to my [GitHub](https://gi
 - [LinkedIn](https://www.linkedin.com/in/mrandystorey/)
 
 ## Book
-Incredibly, inbetween Open University assignments, full time work and a young family I got involved in writing a hardback book about the history of cycling jerseys and clothing.  Over the years, I built up a decent collection of cycle jerseys many of which I've now sold to clear up some space, which I published via a website (my final year Open University project) that was then made into a real-life book thanks to the Octopus Publishing Group published in May 2016.
+Incredibly, inbetween Open University assignments, full time work and a young family I got involved in writing a hardback book about the history of cycling jerseys and clothing.  Over the years in the cycle trade, I built up a decent and varied collection of cycle jerseys which I published via a website (my final year Open University project) that was then made into a real-life book thanks to the Octopus Publishing Group, published in May 2016.
 
-The [Art of the Jersey](https://www.amazon.co.uk/Art-Jersey-Celebration-Cycling-Racing/dp/1784721662/) celebrates the jersey’s changing styles and trends and features over 200 jerseys with each one having a a photograph along with a key information telling the jersey's story.
+The [Art of the Jersey](https://www.amazon.co.uk/Art-Jersey-Celebration-Cycling-Racing/dp/1784721662/) celebrates the jersey’s changing styles and trends and features over 200 jerseys with each one having a photograph along with a key information telling the jersey's story.
 
 ![Art of the Jersey Book](https://mrandystorey.github.io/docs/assets/images/art-of-the-jersey-book.jpg)
