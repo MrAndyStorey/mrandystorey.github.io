@@ -1,6 +1,6 @@
 # Welcome
 
-After years working in IT, I am now training to be a Computer Science Teacher with [WSTP](https://www.wessexschools.uk/).
+After years working in IT, then running my own business, I am now a Computer Science Teacher working on the south coast of England.
 
 I’ve enjoyed a varied career, in both the public and private sector, with numerous technical and soft skills that I feel are transferable into teaching.  
 
