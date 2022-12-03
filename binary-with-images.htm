@@ -1,0 +1,252 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Data Representation: 1 bit Bitmap and Binary</title>
+
+    <style>
+        body { font-family: Helvetica, Arial, sans-serif; font-size: 14pt;}
+
+        .pixel {
+            width: 50px; 
+            height: 50px; 
+            margin: 0px; 
+            display: run-in; 
+            float:left; 
+            border: 0px; 
+            background-color: black;
+        }
+        .spacer {
+            width: 150px; 
+            height: 50px; 
+            margin: 0px; 
+            display: run-in; 
+            float:left; 
+            border: 0px; 
+        }
+        .binary {
+            font-family: monospace; 
+        }
+        .number {
+            width: 215px; 
+            height: 50px; 
+            margin: 0px; 
+            float:left; 
+            font-family: monospace; 
+            font-size: 44px;
+        }
+        .row {
+            display: block; 
+            float:left; 
+        }
+        .grid {
+            width: 400px; 
+            height: 400px; 
+            outline:1px solid black;
+            float:left; 
+        }
+        .dataRep {
+            width: 215px; 
+            height: 400px; 
+            outline:1px solid black;
+            display: run-in; 
+            float:left; 
+            font-family: monospace; 
+        }
+        .textContainer {
+            width: 1000px; 
+        }
+
+
+        .footer {
+            width: 1000px; 
+            height: 400px; 
+            display: run-in; 
+            float:left; 
+        }
+
+        
+    </style>
+    <script>
+        function update_pixel(passedDIV, passedDataName)
+        {
+            if (passedDIV.style.backgroundColor === 'white')
+            {   
+                passedDIV.style.backgroundColor= 'black';
+            } else {
+                passedDIV.style.backgroundColor= 'white';
+            }
+
+            update_row(passedDIV.parentNode, passedDataName);
+            update_fullBinary();
+        }
+
+        function update_row(passedDIV, passedByteName)
+        {   
+            //Local var - initally set to an empty string
+            let builtStr = '';
+
+            //Iterate through each child element and see hat colour it is.    White will be represnted by 1, Black by 0
+            for (let element of passedDIV.children) {
+                if (element.style.backgroundColor === 'white')
+                {   
+                    builtStr = builtStr + '1';
+                } else {
+                    builtStr = builtStr + '0';
+                }
+            }
+            //Now update the DIV tag that is representing this row
+            document.getElementById(passedByteName).innerHTML=builtStr;
+        }
+
+        function update_fullBinary()
+        {
+            //Local var - initally set to an empty string
+            let builtStr = '';
+            let classList = document.getElementsByClassName('number');
+
+            for (i = 0; i < classList.length; i++) {
+                builtStr = builtStr + classList[i].innerHTML;
+            }
+
+            //Now update the DIV tag that is representing this row
+            document.getElementById('fullBinary').innerHTML=builtStr;
+        }
+
+        function resetGridWithColour(passedColour)
+        {
+            let classList = document.getElementsByClassName('pixel');
+
+            for (i = 0; i < classList.length; i++) {
+                classList[i].style.backgroundColor = passedColour;
+            }
+
+            let updateList = document.getElementById('grid');
+            for (let element of updateList.children) {
+                update_row(document.getElementById(element.id), String(element.id).replace("row","num"));
+            }
+            update_fullBinary();
+        }
+
+
+</script>
+</head>
+<body>
+    <div class="textContainer">
+        <h1>Data Representation</h1>
+        <h2>1 bit Bitmap</h2>
+
+        <p>Below is a 8 x 8 grid that you can create your own bitmap image design</p>
+        <p>Click on each square to reverse the colour, turning black to white, or white to black.<br />Each row will be converted into a <b>binary byte</b> and the resulting pattern of 0s and 1s is displayed to the right of the grid.</p>
+        <p>You can reset the grid anytime by clicking on <a href="#" onclick="resetGridWithColour('black');">black</a> or <a href="#" onclick="resetGridWithColour('white');">white</a>.</p>
+        
+    </div>
+
+    <div class="container">
+        <div class="grid" id="grid">
+            <div class="row" id="row1">
+                <div class="pixel" id="px1_1" onclick="update_pixel(this, 'num1');"></div>
+                <div class="pixel" id="px1_2" onclick="update_pixel(this, 'num1');"></div>
+                <div class="pixel" id="px1_3" onclick="update_pixel(this, 'num1');"></div>
+                <div class="pixel" id="px1_4" onclick="update_pixel(this, 'num1');"></div>
+                <div class="pixel" id="px1_5" onclick="update_pixel(this, 'num1');"></div>
+                <div class="pixel" id="px1_6" onclick="update_pixel(this, 'num1');"></div>
+                <div class="pixel" id="px1_7" onclick="update_pixel(this, 'num1');"></div>
+                <div class="pixel" id="px1_8" onclick="update_pixel(this, 'num1');"></div>
+            </div>
+            <div class="row" id="row2">
+                <div class="pixel" id="px2_1" onclick="update_pixel(this, 'num2');"></div>
+                <div class="pixel" id="px2_2" onclick="update_pixel(this, 'num2');"></div>
+                <div class="pixel" id="px2_3" onclick="update_pixel(this, 'num2');"></div>
+                <div class="pixel" id="px2_4" onclick="update_pixel(this, 'num2');"></div>
+                <div class="pixel" id="px2_5" onclick="update_pixel(this, 'num2');"></div>
+                <div class="pixel" id="px2_6" onclick="update_pixel(this, 'num2');"></div>
+                <div class="pixel" id="px2_7" onclick="update_pixel(this, 'num2');"></div>
+                <div class="pixel" id="px2_8" onclick="update_pixel(this, 'num2');"></div>
+            </div>
+            <div class="row" id="row3">
+                <div class="pixel" id="px3_1" onclick="update_pixel(this, 'num3');"></div>
+                <div class="pixel" id="px3_2" onclick="update_pixel(this, 'num3');"></div>
+                <div class="pixel" id="px3_3" onclick="update_pixel(this, 'num3');"></div>
+                <div class="pixel" id="px3_4" onclick="update_pixel(this, 'num3');"></div>
+                <div class="pixel" id="px3_5" onclick="update_pixel(this, 'num3');"></div>
+                <div class="pixel" id="px3_6" onclick="update_pixel(this, 'num3');"></div>
+                <div class="pixel" id="px3_7" onclick="update_pixel(this, 'num3');"></div>
+                <div class="pixel" id="px3_8" onclick="update_pixel(this, 'num3');"></div>
+            </div>
+            <div class="row" id="row4">
+                <div class="pixel" id="px4_1" onclick="update_pixel(this, 'num4');"></div>
+                <div class="pixel" id="px4_2" onclick="update_pixel(this, 'num4');"></div>
+                <div class="pixel" id="px4_3" onclick="update_pixel(this, 'num4');"></div>
+                <div class="pixel" id="px4_4" onclick="update_pixel(this, 'num4');"></div>
+                <div class="pixel" id="px4_5" onclick="update_pixel(this, 'num4');"></div>
+                <div class="pixel" id="px4_6" onclick="update_pixel(this, 'num4');"></div>
+                <div class="pixel" id="px4_7" onclick="update_pixel(this, 'num4');"></div>
+                <div class="pixel" id="px4_8" onclick="update_pixel(this, 'num4');"></div>
+            </div>
+            <div class="row" id="row5">
+                <div class="pixel" id="px5_1" onclick="update_pixel(this, 'num5');"></div>
+                <div class="pixel" id="px5_2" onclick="update_pixel(this, 'num5');"></div>
+                <div class="pixel" id="px5_3" onclick="update_pixel(this, 'num5');"></div>
+                <div class="pixel" id="px5_4" onclick="update_pixel(this, 'num5');"></div>
+                <div class="pixel" id="px5_5" onclick="update_pixel(this, 'num5');"></div>
+                <div class="pixel" id="px5_6" onclick="update_pixel(this, 'num5');"></div>
+                <div class="pixel" id="px5_7" onclick="update_pixel(this, 'num5');"></div>
+                <div class="pixel" id="px5_8" onclick="update_pixel(this, 'num5');"></div>
+            </div>
+            <div class="row" id="row6">
+                <div class="pixel" id="px6_1" onclick="update_pixel(this, 'num6');"></div>
+                <div class="pixel" id="px6_2" onclick="update_pixel(this, 'num6');"></div>
+                <div class="pixel" id="px6_3" onclick="update_pixel(this, 'num6');"></div>
+                <div class="pixel" id="px6_4" onclick="update_pixel(this, 'num6');"></div>
+                <div class="pixel" id="px6_5" onclick="update_pixel(this, 'num6');"></div>
+                <div class="pixel" id="px6_6" onclick="update_pixel(this, 'num6');"></div>
+                <div class="pixel" id="px6_7" onclick="update_pixel(this, 'num6');"></div>
+                <div class="pixel" id="px6_8" onclick="update_pixel(this, 'num6');"></div>
+            </div>
+            <div class="row" id="row7">
+                <div class="pixel" id="px7_1" onclick="update_pixel(this, 'num7');"></div>
+                <div class="pixel" id="px7_2" onclick="update_pixel(this, 'num7');"></div>
+                <div class="pixel" id="px7_3" onclick="update_pixel(this, 'num7');"></div>
+                <div class="pixel" id="px7_4" onclick="update_pixel(this, 'num7');"></div>
+                <div class="pixel" id="px7_5" onclick="update_pixel(this, 'num7');"></div>
+                <div class="pixel" id="px7_6" onclick="update_pixel(this, 'num7');"></div>
+                <div class="pixel" id="px7_7" onclick="update_pixel(this, 'num7');"></div>
+                <div class="pixel" id="px7_8" onclick="update_pixel(this, 'num7');"></div>
+            </div>
+            <div class="row" id="row8">
+                <div class="pixel" id="px8_1" onclick="update_pixel(this, 'num8');"></div>
+                <div class="pixel" id="px8_2" onclick="update_pixel(this, 'num8');"></div>
+                <div class="pixel" id="px8_3" onclick="update_pixel(this, 'num8');"></div>
+                <div class="pixel" id="px8_4" onclick="update_pixel(this, 'num8');"></div>
+                <div class="pixel" id="px8_5" onclick="update_pixel(this, 'num8');"></div>
+                <div class="pixel" id="px8_6" onclick="update_pixel(this, 'num8');"></div>
+                <div class="pixel" id="px8_7" onclick="update_pixel(this, 'num8');"></div>
+                <div class="pixel" id="px8_8" onclick="update_pixel(this, 'num8');"></div>
+            </div>
+    </div>
+    <div class="dataRep">
+        <div class="number" id="num1">00000000</div>
+        <div class="number" id="num2">00000000</div>
+        <div class="number" id="num3">00000000</div>
+        <div class="number" id="num4">00000000</div>
+        <div class="number" id="num5">00000000</div>
+        <div class="number" id="num6">00000000</div>
+        <div class="number" id="num7">00000000</div>
+        <div class="number" id="num8">00000000</div>
+    </div>
+    </div>
+
+
+
+
+    <div class="footer">
+        <p>You can see the complete <b>binary data</b> below where we are using just <b>one bit</b> for each <b>pixel</b> making <strong>64 bits or 8 bytes</strong> in total.<br />
+        <span class="binary" id="fullBinary">0000000000000000000000000000000000000000000000000000000000000000</span></p>
+
+        <p>&nbsp;</p>
+    </div>
+
+
+</body>
+</html>

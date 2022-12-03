@@ -1,0 +1,476 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Data Representation: 2 bit Bitmap and Binary</title>
+
+    <style>
+        body { font-family: Helvetica, Arial, sans-serif; font-size: 14pt;}
+
+        .pixel {
+            width: 25px; 
+            height: 25px; 
+            margin: 0px; 
+            display: run-in; 
+            float:left; 
+            border: 0px; 
+            background-color: black;
+        }
+        .binary {
+            font-family: monospace; 
+            word-wrap: break-word;
+        }
+        .number {
+            width: 270px; 
+            height: 25px; 
+            margin: 0px; 
+            float:left; 
+            font-family: monospace; 
+            font-size: 14px;
+        }
+        .row {
+            display: block; 
+            float:left; 
+        }
+        .grid {
+            width: 400px; 
+            height: 400px; 
+            outline:1px solid black;
+            float:left; 
+        }
+        .dataRep {
+            width: 275px; 
+            height: 400px; 
+            outline:1px solid black;
+            display: run-in; 
+            float:left; 
+            font-family: monospace; 
+        }
+        .colourSpacer {
+            width: 33px; 
+            height: 400px; 
+            display: run-in; 
+            float:left; 
+        }
+        .colourChoices {
+            width: 200px; 
+            height: 400px; 
+            display: run-in; 
+            float:left; 
+        }
+        .textContainer {
+            width: 1000px; 
+        }
+        .footer {
+            width: 1000px; 
+            height: 400px; 
+            display: run-in; 
+            float:left; 
+        }
+
+    </style>
+    <script>
+        function update_pixel(passedDIV, passedDataName)
+        {
+            let colour00 = String(document.getElementById('currentColour00').value);
+            let colour01 = String(document.getElementById('currentColour01').value);
+            let colour10 = String(document.getElementById('currentColour10').value);
+            let colour11 = String(document.getElementById('currentColour11').value);
+
+            switch(String(passedDIV.style.backgroundColor)) {
+                case colour00:
+                    passedDIV.style.backgroundColor = colour01;
+                    break;
+                case colour01:
+                    passedDIV.style.backgroundColor = colour10;
+                    break;
+                case colour10:
+                    passedDIV.style.backgroundColor = colour11;
+                    break;
+                case colour11:
+                    passedDIV.style.backgroundColor = colour00;
+                    break;
+            }
+
+
+            update_row(passedDIV.parentNode, passedDataName);
+            update_fullBinary();
+        }
+
+        function update_row(passedDIV, passedByteName)
+        {   
+            //Local var - initally set to an empty string
+            let builtStr = '';
+            let colour00 = String(document.getElementById('currentColour00').value);
+            let colour01 = String(document.getElementById('currentColour01').value);
+            let colour10 = String(document.getElementById('currentColour10').value);
+            let colour11 = String(document.getElementById('currentColour11').value);
+
+            //Iterate through each child element and see what colour it is. 
+            for (let element of passedDIV.children) {
+                switch(String(element.style.backgroundColor)) {
+                    case colour00:
+                        builtStr = builtStr + '00';
+                        break;
+                    case colour01:
+                        builtStr = builtStr + '01';
+                        break;
+                    case colour10:
+                        builtStr = builtStr + '10';
+                        break;
+                    case colour11:
+                        builtStr = builtStr + '11';
+                        break;
+                }
+            }
+            //Now update the DIV tag that is representing this row
+            document.getElementById(passedByteName).innerHTML=builtStr;
+        }
+
+        function update_fullBinary()
+        {
+            //Local var - initally set to an empty string
+            let builtStr = '';
+            //Local var - classList will result the DIV tags that contain the binary for each grid row
+            let classList = document.getElementsByClassName('number');
+
+            for (i = 0; i < classList.length; i++) {
+                builtStr = builtStr + classList[i].innerHTML;
+            }
+
+            //Now update the DIV tag that contains the full bianry representation
+            document.getElementById('fullBinary').innerHTML=builtStr;
+        }
+
+        function resetGridWithColour(passedColour)
+        {
+            //Local var - colourname from the drop down
+            let colourValue = passedColour.options[passedColour.selectedIndex].value;
+            //Local var - classList will result the indiviual pixel DIV tags
+            let classList = document.getElementsByClassName('pixel');
+
+            for (i = 0; i < classList.length; i++) {
+                classList[i].style.backgroundColor = colourValue;
+            }
+
+            //Needed to update the Binary Representation of each grid row
+            let updateList = document.getElementById('grid');
+            for (let element of updateList.children) {
+                update_row(document.getElementById(element.id), String(element.id).replace("row","num"));
+            }
+
+            //Update the Binary Representation of pixels
+            update_fullBinary();
+        }
+
+        function focusColour(passedExistingColourIndex, focusField)
+        {
+            focusField.value = passedExistingColourIndex.selectedIndex;
+        }
+
+        function loadGrid(passedBinaryValues)
+        {
+            let colour00 = String(document.getElementById('currentColour00').value);
+            let colour01 = String(document.getElementById('currentColour01').value);
+            let colour10 = String(document.getElementById('currentColour10').value);
+            let colour11 = String(document.getElementById('currentColour11').value);
+
+            // Build an array of 2bit values.   The {2} part of the regex only gets them in twos, if odd, last value is omitted
+            let arrOfValues = passedBinaryValues.match(/.{2}/g);
+
+
+            let classList = document.getElementsByClassName('pixel');
+
+            for (i = 0; i < classList.length; i++) {
+
+                switch(String(arrOfValues[i])) {
+                case "00":
+                    classList[i].style.backgroundColor = colour00;
+                    break;
+                case "01":
+                    classList[i].style.backgroundColor = colour01;
+                    break;
+                case "10":
+                    classList[i].style.backgroundColor = colour10;
+                    break;
+                case "11":
+                    classList[i].style.backgroundColor = colour11;
+                    break;
+                }
+            }
+
+            //Needed to update the Binary Representation of each grid row
+            let updateList = document.getElementById('grid');
+            for (let element of updateList.children) {
+                update_row(document.getElementById(element.id), String(element.id).replace("row","num"));
+            }
+
+            //Once done, update the Binary Representation of pixels
+            update_fullBinary();
+        }
+
+
+        function swapColour(passedOldColour, passedNewColour, focusField)
+        {
+            let oldColourValue = passedOldColour.value;
+            let newColourValue = passedNewColour.options[passedNewColour.selectedIndex].value;
+
+            //Before we change the colour, make sure they haven't selected one we're already using
+            let existingColourList = new Set([document.getElementById('currentColour00').value, document.getElementById('currentColour01').value, document.getElementById('currentColour10').value, document.getElementById('currentColour11').value])
+            if (existingColourList.has(newColourValue) === false)
+            {
+                //Local var - classList will result the indiviual pixel DIV tags
+                let classList = document.getElementsByClassName('pixel');
+
+                for (i = 0; i < classList.length; i++) {
+                    if (classList[i].style.backgroundColor === oldColourValue) 
+                    [
+                        classList[i].style.backgroundColor = newColourValue
+                    ]
+                }
+                passedOldColour.value = newColourValue;
+            } else {
+                //We need to set the old value of the drop down back to previous
+                passedNewColour.selectedIndex = focusField.value;
+            }
+            //Update the Binary Representation of pixels
+            update_fullBinary();
+        }
+
+        function setup()
+        {
+            document.getElementById('currentColour00').value = String(document.getElementById('colour00').options[document.getElementById('colour00').selectedIndex].value);
+            document.getElementById('currentColour01').value = String(document.getElementById('colour01').options[document.getElementById('colour01').selectedIndex].value);
+            document.getElementById('currentColour10').value = String(document.getElementById('colour10').options[document.getElementById('colour10').selectedIndex].value);
+            document.getElementById('currentColour11').value = String(document.getElementById('colour11').options[document.getElementById('colour11').selectedIndex].value);
+
+            document.getElementById('previousColour00').value = document.getElementById('currentColour00').value;
+            document.getElementById('previousColour01').value = document.getElementById('currentColour01').value;
+            document.getElementById('previousColour10').value = document.getElementById('currentColour10').value;
+            document.getElementById('previousColour11').value = document.getElementById('currentColour11').value;
+
+            resetGridWithColour(document.getElementById('colour01'));
+        }
+</script>
+</head>
+<body onload="setup();">
+    <div class="textContainer">
+        <h1>Data Representation</h1>
+        <h2>2 bit Bitmap</h2>
+
+        <p>Below is a 16 x 16 grid that you can create your own bitmap image design.  As there are more pixels in the grid, it will allow you to create a better design compared to the <strong>1 bit</strong> version.</p>
+        <p>You have <b>four colours</b> available represented by 00, 01, 10 or 11 as we are using <b>2 bits</b> to store the colour of each <b>pixel</b>.<br />Each row will be converted into <b>two binary bytes</b> and the resulting pattern of 0s and 1s is displayed to the right of the grid.</p>
+        <p>Click on a square to change the colour.  You can reset the grid anytime by clicking on the colour heading below.</p>
+        <p>Need some inspiration?  Here's <a href="#" onClick="loadGrid('01010001010101010101010100010101010100000000010101000000000100000101000010000000000010000001001001010010101010101010101000001010010101001010101010101000010010000101001010101010101010100000100001010010100010101000101000101000010010101010100010101010100010000100101011100000001011101000000101001010101010101010101010000101010010101000101010001010100001010100101000001010100000101000010101001010101010101010101010000101010100101010101010101010000101010101010010100000001010000101010101010101000001010100000101010101');">Pikachu</a>!</p>
+        
+    </div>
+
+    <div class="container">
+        <div class="grid" id="grid">
+            <div class="row" id="row1">
+                <div class="pixel" id="px1_01" onclick="update_pixel(this, 'num1');"></div><div class="pixel" id="px1_02" onclick="update_pixel(this, 'num1');"></div>
+                <div class="pixel" id="px1_03" onclick="update_pixel(this, 'num1');"></div><div class="pixel" id="px1_04" onclick="update_pixel(this, 'num1');"></div>
+                <div class="pixel" id="px1_05" onclick="update_pixel(this, 'num1');"></div><div class="pixel" id="px1_06" onclick="update_pixel(this, 'num1');"></div>
+                <div class="pixel" id="px1_07" onclick="update_pixel(this, 'num1');"></div><div class="pixel" id="px1_08" onclick="update_pixel(this, 'num1');"></div>
+                <div class="pixel" id="px1_09" onclick="update_pixel(this, 'num1');"></div><div class="pixel" id="px1_10" onclick="update_pixel(this, 'num1');"></div>
+                <div class="pixel" id="px1_11" onclick="update_pixel(this, 'num1');"></div><div class="pixel" id="px1_12" onclick="update_pixel(this, 'num1');"></div>
+                <div class="pixel" id="px1_13" onclick="update_pixel(this, 'num1');"></div><div class="pixel" id="px1_14" onclick="update_pixel(this, 'num1');"></div>
+                <div class="pixel" id="px1_15" onclick="update_pixel(this, 'num1');"></div><div class="pixel" id="px1_16" onclick="update_pixel(this, 'num1');"></div>
+            </div>
+            <div class="row" id="row2">
+                <div class="pixel" id="px2_01" onclick="update_pixel(this, 'num2');"></div><div class="pixel" id="px2_02" onclick="update_pixel(this, 'num2');"></div>
+                <div class="pixel" id="px2_03" onclick="update_pixel(this, 'num2');"></div><div class="pixel" id="px2_04" onclick="update_pixel(this, 'num2');"></div>
+                <div class="pixel" id="px2_05" onclick="update_pixel(this, 'num2');"></div><div class="pixel" id="px2_06" onclick="update_pixel(this, 'num2');"></div>
+                <div class="pixel" id="px2_07" onclick="update_pixel(this, 'num2');"></div><div class="pixel" id="px2_08" onclick="update_pixel(this, 'num2');"></div>
+                <div class="pixel" id="px2_09" onclick="update_pixel(this, 'num2');"></div><div class="pixel" id="px2_10" onclick="update_pixel(this, 'num2');"></div>
+                <div class="pixel" id="px2_11" onclick="update_pixel(this, 'num2');"></div><div class="pixel" id="px2_12" onclick="update_pixel(this, 'num2');"></div>
+                <div class="pixel" id="px2_13" onclick="update_pixel(this, 'num2');"></div><div class="pixel" id="px2_14" onclick="update_pixel(this, 'num2');"></div>
+                <div class="pixel" id="px2_15" onclick="update_pixel(this, 'num2');"></div><div class="pixel" id="px2_16" onclick="update_pixel(this, 'num2');"></div>
+            </div>
+            <div class="row" id="row3">
+                <div class="pixel" id="px3_01" onclick="update_pixel(this, 'num3');"></div><div class="pixel" id="px3_02" onclick="update_pixel(this, 'num3');"></div>
+                <div class="pixel" id="px3_03" onclick="update_pixel(this, 'num3');"></div><div class="pixel" id="px3_04" onclick="update_pixel(this, 'num3');"></div>
+                <div class="pixel" id="px3_05" onclick="update_pixel(this, 'num3');"></div><div class="pixel" id="px3_06" onclick="update_pixel(this, 'num3');"></div>
+                <div class="pixel" id="px3_07" onclick="update_pixel(this, 'num3');"></div><div class="pixel" id="px3_08" onclick="update_pixel(this, 'num3');"></div>
+                <div class="pixel" id="px3_09" onclick="update_pixel(this, 'num3');"></div><div class="pixel" id="px3_10" onclick="update_pixel(this, 'num3');"></div>
+                <div class="pixel" id="px3_11" onclick="update_pixel(this, 'num3');"></div><div class="pixel" id="px3_12" onclick="update_pixel(this, 'num3');"></div>
+                <div class="pixel" id="px3_13" onclick="update_pixel(this, 'num3');"></div><div class="pixel" id="px3_14" onclick="update_pixel(this, 'num3');"></div>
+                <div class="pixel" id="px3_15" onclick="update_pixel(this, 'num3');"></div><div class="pixel" id="px3_16" onclick="update_pixel(this, 'num3');"></div>
+            </div>
+            <div class="row" id="row4">
+                <div class="pixel" id="px4_01" onclick="update_pixel(this, 'num4');"></div><div class="pixel" id="px4_02" onclick="update_pixel(this, 'num4');"></div>
+                <div class="pixel" id="px4_03" onclick="update_pixel(this, 'num4');"></div><div class="pixel" id="px4_04" onclick="update_pixel(this, 'num4');"></div>
+                <div class="pixel" id="px4_05" onclick="update_pixel(this, 'num4');"></div><div class="pixel" id="px4_06" onclick="update_pixel(this, 'num4');"></div>
+                <div class="pixel" id="px4_07" onclick="update_pixel(this, 'num4');"></div><div class="pixel" id="px4_08" onclick="update_pixel(this, 'num4');"></div>
+                <div class="pixel" id="px4_09" onclick="update_pixel(this, 'num4');"></div><div class="pixel" id="px4_10" onclick="update_pixel(this, 'num4');"></div>
+                <div class="pixel" id="px4_11" onclick="update_pixel(this, 'num4');"></div><div class="pixel" id="px4_12" onclick="update_pixel(this, 'num4');"></div>
+                <div class="pixel" id="px4_13" onclick="update_pixel(this, 'num4');"></div><div class="pixel" id="px4_14" onclick="update_pixel(this, 'num4');"></div>
+                <div class="pixel" id="px4_15" onclick="update_pixel(this, 'num4');"></div><div class="pixel" id="px4_16" onclick="update_pixel(this, 'num4');"></div>
+            </div>
+            <div class="row" id="row5">
+                <div class="pixel" id="px5_01" onclick="update_pixel(this, 'num5');"></div><div class="pixel" id="px5_02" onclick="update_pixel(this, 'num5');"></div>
+                <div class="pixel" id="px5_03" onclick="update_pixel(this, 'num5');"></div><div class="pixel" id="px5_04" onclick="update_pixel(this, 'num5');"></div>
+                <div class="pixel" id="px5_05" onclick="update_pixel(this, 'num5');"></div><div class="pixel" id="px5_06" onclick="update_pixel(this, 'num5');"></div>
+                <div class="pixel" id="px5_07" onclick="update_pixel(this, 'num5');"></div><div class="pixel" id="px5_08" onclick="update_pixel(this, 'num5');"></div>
+                <div class="pixel" id="px5_09" onclick="update_pixel(this, 'num5');"></div><div class="pixel" id="px5_10" onclick="update_pixel(this, 'num5');"></div>
+                <div class="pixel" id="px5_11" onclick="update_pixel(this, 'num5');"></div><div class="pixel" id="px5_12" onclick="update_pixel(this, 'num5');"></div>
+                <div class="pixel" id="px5_13" onclick="update_pixel(this, 'num5');"></div><div class="pixel" id="px5_14" onclick="update_pixel(this, 'num5');"></div>
+                <div class="pixel" id="px5_15" onclick="update_pixel(this, 'num5');"></div><div class="pixel" id="px5_16" onclick="update_pixel(this, 'num5');"></div>
+            </div>
+            <div class="row" id="row6">
+                <div class="pixel" id="px6_01" onclick="update_pixel(this, 'num6');"></div><div class="pixel" id="px6_02" onclick="update_pixel(this, 'num6');"></div>
+                <div class="pixel" id="px6_03" onclick="update_pixel(this, 'num6');"></div><div class="pixel" id="px6_04" onclick="update_pixel(this, 'num6');"></div>
+                <div class="pixel" id="px6_05" onclick="update_pixel(this, 'num6');"></div><div class="pixel" id="px6_06" onclick="update_pixel(this, 'num6');"></div>
+                <div class="pixel" id="px6_07" onclick="update_pixel(this, 'num6');"></div><div class="pixel" id="px6_08" onclick="update_pixel(this, 'num6');"></div>
+                <div class="pixel" id="px6_09" onclick="update_pixel(this, 'num6');"></div><div class="pixel" id="px6_10" onclick="update_pixel(this, 'num6');"></div>
+                <div class="pixel" id="px6_11" onclick="update_pixel(this, 'num6');"></div><div class="pixel" id="px6_12" onclick="update_pixel(this, 'num6');"></div>
+                <div class="pixel" id="px6_13" onclick="update_pixel(this, 'num6');"></div><div class="pixel" id="px6_14" onclick="update_pixel(this, 'num6');"></div>
+                <div class="pixel" id="px6_15" onclick="update_pixel(this, 'num6');"></div><div class="pixel" id="px6_16" onclick="update_pixel(this, 'num6');"></div>
+            </div>
+            <div class="row" id="row7">
+                <div class="pixel" id="px7_01" onclick="update_pixel(this, 'num7');"></div><div class="pixel" id="px7_02" onclick="update_pixel(this, 'num7');"></div>
+                <div class="pixel" id="px7_03" onclick="update_pixel(this, 'num7');"></div><div class="pixel" id="px7_04" onclick="update_pixel(this, 'num7');"></div>
+                <div class="pixel" id="px7_05" onclick="update_pixel(this, 'num7');"></div><div class="pixel" id="px7_06" onclick="update_pixel(this, 'num7');"></div>
+                <div class="pixel" id="px7_07" onclick="update_pixel(this, 'num7');"></div><div class="pixel" id="px7_08" onclick="update_pixel(this, 'num7');"></div>
+                <div class="pixel" id="px7_09" onclick="update_pixel(this, 'num7');"></div><div class="pixel" id="px7_10" onclick="update_pixel(this, 'num7');"></div>
+                <div class="pixel" id="px7_11" onclick="update_pixel(this, 'num7');"></div><div class="pixel" id="px7_12" onclick="update_pixel(this, 'num7');"></div>
+                <div class="pixel" id="px7_13" onclick="update_pixel(this, 'num7');"></div><div class="pixel" id="px7_14" onclick="update_pixel(this, 'num7');"></div>
+                <div class="pixel" id="px7_15" onclick="update_pixel(this, 'num7');"></div><div class="pixel" id="px7_16" onclick="update_pixel(this, 'num7');"></div>
+            </div>
+            <div class="row" id="row8">
+                <div class="pixel" id="px8_01" onclick="update_pixel(this, 'num8');"></div><div class="pixel" id="px8_02" onclick="update_pixel(this, 'num8');"></div>
+                <div class="pixel" id="px8_03" onclick="update_pixel(this, 'num8');"></div><div class="pixel" id="px8_04" onclick="update_pixel(this, 'num8');"></div>
+                <div class="pixel" id="px8_05" onclick="update_pixel(this, 'num8');"></div><div class="pixel" id="px8_06" onclick="update_pixel(this, 'num8');"></div>
+                <div class="pixel" id="px8_07" onclick="update_pixel(this, 'num8');"></div><div class="pixel" id="px8_08" onclick="update_pixel(this, 'num8');"></div>
+                <div class="pixel" id="px8_09" onclick="update_pixel(this, 'num8');"></div><div class="pixel" id="px8_10" onclick="update_pixel(this, 'num8');"></div>
+                <div class="pixel" id="px8_11" onclick="update_pixel(this, 'num8');"></div><div class="pixel" id="px8_12" onclick="update_pixel(this, 'num8');"></div>
+                <div class="pixel" id="px8_13" onclick="update_pixel(this, 'num8');"></div><div class="pixel" id="px8_14" onclick="update_pixel(this, 'num8');"></div>
+                <div class="pixel" id="px8_15" onclick="update_pixel(this, 'num8');"></div><div class="pixel" id="px8_16" onclick="update_pixel(this, 'num8');"></div>
+            </div>
+            <div class="row" id="row9">
+                <div class="pixel" id="px9_01" onclick="update_pixel(this, 'num9');"></div><div class="pixel" id="px9_02" onclick="update_pixel(this, 'num9');"></div>
+                <div class="pixel" id="px9_03" onclick="update_pixel(this, 'num9');"></div><div class="pixel" id="px9_04" onclick="update_pixel(this, 'num9');"></div>
+                <div class="pixel" id="px9_05" onclick="update_pixel(this, 'num9');"></div><div class="pixel" id="px9_06" onclick="update_pixel(this, 'num9');"></div>
+                <div class="pixel" id="px9_07" onclick="update_pixel(this, 'num9');"></div><div class="pixel" id="px9_08" onclick="update_pixel(this, 'num9');"></div>
+                <div class="pixel" id="px9_09" onclick="update_pixel(this, 'num9');"></div><div class="pixel" id="px9_10" onclick="update_pixel(this, 'num9');"></div>
+                <div class="pixel" id="px9_11" onclick="update_pixel(this, 'num9');"></div><div class="pixel" id="px9_12" onclick="update_pixel(this, 'num9');"></div>
+                <div class="pixel" id="px9_13" onclick="update_pixel(this, 'num9');"></div><div class="pixel" id="px9_14" onclick="update_pixel(this, 'num9');"></div>
+                <div class="pixel" id="px9_15" onclick="update_pixel(this, 'num9');"></div><div class="pixel" id="px9_16" onclick="update_pixel(this, 'num9');"></div>
+            </div>
+            <div class="row" id="row10">
+                <div class="pixel" id="px10_01" onclick="update_pixel(this, 'num10');"></div><div class="pixel" id="px10_02" onclick="update_pixel(this, 'num10');"></div>
+                <div class="pixel" id="px10_03" onclick="update_pixel(this, 'num10');"></div><div class="pixel" id="px10_04" onclick="update_pixel(this, 'num10');"></div>
+                <div class="pixel" id="px10_05" onclick="update_pixel(this, 'num10');"></div><div class="pixel" id="px10_06" onclick="update_pixel(this, 'num10');"></div>
+                <div class="pixel" id="px10_07" onclick="update_pixel(this, 'num10');"></div><div class="pixel" id="px10_08" onclick="update_pixel(this, 'num10');"></div>
+                <div class="pixel" id="px10_09" onclick="update_pixel(this, 'num10');"></div><div class="pixel" id="px10_10" onclick="update_pixel(this, 'num10');"></div>
+                <div class="pixel" id="px10_11" onclick="update_pixel(this, 'num10');"></div><div class="pixel" id="px10_12" onclick="update_pixel(this, 'num10');"></div>
+                <div class="pixel" id="px10_13" onclick="update_pixel(this, 'num10');"></div><div class="pixel" id="px10_14" onclick="update_pixel(this, 'num10');"></div>
+                <div class="pixel" id="px10_15" onclick="update_pixel(this, 'num10');"></div><div class="pixel" id="px10_16" onclick="update_pixel(this, 'num10');"></div>
+            </div>
+            <div class="row" id="row11">
+                <div class="pixel" id="px11_01" onclick="update_pixel(this, 'num11');"></div><div class="pixel" id="px11_02" onclick="update_pixel(this, 'num11');"></div>
+                <div class="pixel" id="px11_03" onclick="update_pixel(this, 'num11');"></div><div class="pixel" id="px11_04" onclick="update_pixel(this, 'num11');"></div>
+                <div class="pixel" id="px11_05" onclick="update_pixel(this, 'num11');"></div><div class="pixel" id="px11_06" onclick="update_pixel(this, 'num11');"></div>
+                <div class="pixel" id="px11_07" onclick="update_pixel(this, 'num11');"></div><div class="pixel" id="px11_08" onclick="update_pixel(this, 'num11');"></div>
+                <div class="pixel" id="px11_09" onclick="update_pixel(this, 'num11');"></div><div class="pixel" id="px11_10" onclick="update_pixel(this, 'num11');"></div>
+                <div class="pixel" id="px11_11" onclick="update_pixel(this, 'num11');"></div><div class="pixel" id="px11_12" onclick="update_pixel(this, 'num11');"></div>
+                <div class="pixel" id="px11_13" onclick="update_pixel(this, 'num11');"></div><div class="pixel" id="px11_14" onclick="update_pixel(this, 'num11');"></div>
+                <div class="pixel" id="px11_15" onclick="update_pixel(this, 'num11');"></div><div class="pixel" id="px11_16" onclick="update_pixel(this, 'num11');"></div>
+            </div>
+            <div class="row" id="row12">
+                <div class="pixel" id="px12_01" onclick="update_pixel(this, 'num12');"></div><div class="pixel" id="px12_02" onclick="update_pixel(this, 'num12');"></div>
+                <div class="pixel" id="px12_03" onclick="update_pixel(this, 'num12');"></div><div class="pixel" id="px12_04" onclick="update_pixel(this, 'num12');"></div>
+                <div class="pixel" id="px12_05" onclick="update_pixel(this, 'num12');"></div><div class="pixel" id="px12_06" onclick="update_pixel(this, 'num12');"></div>
+                <div class="pixel" id="px12_07" onclick="update_pixel(this, 'num12');"></div><div class="pixel" id="px12_08" onclick="update_pixel(this, 'num12');"></div>
+                <div class="pixel" id="px12_09" onclick="update_pixel(this, 'num12');"></div><div class="pixel" id="px12_10" onclick="update_pixel(this, 'num12');"></div>
+                <div class="pixel" id="px12_11" onclick="update_pixel(this, 'num12');"></div><div class="pixel" id="px12_12" onclick="update_pixel(this, 'num12');"></div>
+                <div class="pixel" id="px12_13" onclick="update_pixel(this, 'num12');"></div><div class="pixel" id="px12_14" onclick="update_pixel(this, 'num12');"></div>
+                <div class="pixel" id="px12_15" onclick="update_pixel(this, 'num12');"></div><div class="pixel" id="px12_16" onclick="update_pixel(this, 'num12');"></div>
+            </div>
+            <div class="row" id="row13">
+                <div class="pixel" id="px13_01" onclick="update_pixel(this, 'num13');"></div><div class="pixel" id="px13_02" onclick="update_pixel(this, 'num13');"></div>
+                <div class="pixel" id="px13_03" onclick="update_pixel(this, 'num13');"></div><div class="pixel" id="px13_04" onclick="update_pixel(this, 'num13');"></div>
+                <div class="pixel" id="px13_05" onclick="update_pixel(this, 'num13');"></div><div class="pixel" id="px13_06" onclick="update_pixel(this, 'num13');"></div>
+                <div class="pixel" id="px13_07" onclick="update_pixel(this, 'num13');"></div><div class="pixel" id="px13_08" onclick="update_pixel(this, 'num13');"></div>
+                <div class="pixel" id="px13_09" onclick="update_pixel(this, 'num13');"></div><div class="pixel" id="px13_10" onclick="update_pixel(this, 'num13');"></div>
+                <div class="pixel" id="px13_11" onclick="update_pixel(this, 'num13');"></div><div class="pixel" id="px13_12" onclick="update_pixel(this, 'num13');"></div>
+                <div class="pixel" id="px13_13" onclick="update_pixel(this, 'num13');"></div><div class="pixel" id="px13_14" onclick="update_pixel(this, 'num13');"></div>
+                <div class="pixel" id="px13_15" onclick="update_pixel(this, 'num13');"></div><div class="pixel" id="px13_16" onclick="update_pixel(this, 'num13');"></div>
+            </div>
+            <div class="row" id="row14">
+                <div class="pixel" id="px14_01" onclick="update_pixel(this, 'num14');"></div><div class="pixel" id="px14_02" onclick="update_pixel(this, 'num14');"></div>
+                <div class="pixel" id="px14_03" onclick="update_pixel(this, 'num14');"></div><div class="pixel" id="px14_04" onclick="update_pixel(this, 'num14');"></div>
+                <div class="pixel" id="px14_05" onclick="update_pixel(this, 'num14');"></div><div class="pixel" id="px14_06" onclick="update_pixel(this, 'num14');"></div>
+                <div class="pixel" id="px14_07" onclick="update_pixel(this, 'num14');"></div><div class="pixel" id="px14_08" onclick="update_pixel(this, 'num14');"></div>
+                <div class="pixel" id="px14_09" onclick="update_pixel(this, 'num14');"></div><div class="pixel" id="px14_10" onclick="update_pixel(this, 'num14');"></div>
+                <div class="pixel" id="px14_11" onclick="update_pixel(this, 'num14');"></div><div class="pixel" id="px14_12" onclick="update_pixel(this, 'num14');"></div>
+                <div class="pixel" id="px14_13" onclick="update_pixel(this, 'num14');"></div><div class="pixel" id="px14_14" onclick="update_pixel(this, 'num14');"></div>
+                <div class="pixel" id="px14_15" onclick="update_pixel(this, 'num14');"></div><div class="pixel" id="px14_16" onclick="update_pixel(this, 'num14');"></div>
+            </div>
+            <div class="row" id="row15">
+                <div class="pixel" id="px15_01" onclick="update_pixel(this, 'num15');"></div><div class="pixel" id="px15_02" onclick="update_pixel(this, 'num15');"></div>
+                <div class="pixel" id="px15_03" onclick="update_pixel(this, 'num15');"></div><div class="pixel" id="px15_04" onclick="update_pixel(this, 'num15');"></div>
+                <div class="pixel" id="px15_05" onclick="update_pixel(this, 'num15');"></div><div class="pixel" id="px15_06" onclick="update_pixel(this, 'num15');"></div>
+                <div class="pixel" id="px15_07" onclick="update_pixel(this, 'num15');"></div><div class="pixel" id="px15_08" onclick="update_pixel(this, 'num15');"></div>
+                <div class="pixel" id="px15_09" onclick="update_pixel(this, 'num15');"></div><div class="pixel" id="px15_10" onclick="update_pixel(this, 'num15');"></div>
+                <div class="pixel" id="px15_11" onclick="update_pixel(this, 'num15');"></div><div class="pixel" id="px15_12" onclick="update_pixel(this, 'num15');"></div>
+                <div class="pixel" id="px15_13" onclick="update_pixel(this, 'num15');"></div><div class="pixel" id="px15_14" onclick="update_pixel(this, 'num15');"></div>
+                <div class="pixel" id="px15_15" onclick="update_pixel(this, 'num15');"></div><div class="pixel" id="px15_16" onclick="update_pixel(this, 'num15');"></div>
+            </div>
+            <div class="row" id="row16">
+                <div class="pixel" id="px16_01" onclick="update_pixel(this, 'num16');"></div><div class="pixel" id="px16_02" onclick="update_pixel(this, 'num16');"></div>
+                <div class="pixel" id="px16_03" onclick="update_pixel(this, 'num16');"></div><div class="pixel" id="px16_04" onclick="update_pixel(this, 'num16');"></div>
+                <div class="pixel" id="px16_05" onclick="update_pixel(this, 'num16');"></div><div class="pixel" id="px16_06" onclick="update_pixel(this, 'num16');"></div>
+                <div class="pixel" id="px16_07" onclick="update_pixel(this, 'num16');"></div><div class="pixel" id="px16_08" onclick="update_pixel(this, 'num16');"></div>
+                <div class="pixel" id="px16_09" onclick="update_pixel(this, 'num16');"></div><div class="pixel" id="px16_10" onclick="update_pixel(this, 'num16');"></div>
+                <div class="pixel" id="px16_11" onclick="update_pixel(this, 'num16');"></div><div class="pixel" id="px16_12" onclick="update_pixel(this, 'num16');"></div>
+                <div class="pixel" id="px16_13" onclick="update_pixel(this, 'num16');"></div><div class="pixel" id="px16_14" onclick="update_pixel(this, 'num16');"></div>
+                <div class="pixel" id="px16_15" onclick="update_pixel(this, 'num16');"></div><div class="pixel" id="px16_16" onclick="update_pixel(this, 'num16');"></div>
+            </div>                                                                          
+    </div>
+    <div class="dataRep">
+        <div class="number" id="num1"></div>
+        <div class="number" id="num2"></div>
+        <div class="number" id="num3"></div>
+        <div class="number" id="num4"></div>
+        <div class="number" id="num5"></div>
+        <div class="number" id="num6"></div>
+        <div class="number" id="num7"></div>
+        <div class="number" id="num8"></div>
+        <div class="number" id="num9"></div>
+        <div class="number" id="num10"></div>
+        <div class="number" id="num11"></div>
+        <div class="number" id="num12"></div>
+        <div class="number" id="num13"></div>
+        <div class="number" id="num14"></div>
+        <div class="number" id="num15"></div>
+        <div class="number" id="num16"></div>
+    </div>
+    <div class="colourSpacer"></div>
+    <div class="colourChoices">
+        <p><a href="#" onClick="resetGridWithColour(document.getElementById('colour00'));">Colour 00</a><br />
+            <select onFocus="focusColour(this, document.getElementById('previousColour00'));" onChange="swapColour(document.getElementById('currentColour00'), this, document.getElementById('previousColour00'));" id="colour00"><option selected>black</option><option>white</option><option>yellow</option><option>red</option><option>blue</option><option>green</option><option>gray</option></select>
+            <input id="currentColour00" value="" size="8" type="hidden" />
+            <input id="previousColour00" value="" size="8" type="hidden" /></p>
+        <p><a href="#" onClick="resetGridWithColour(document.getElementById('colour01'));">Colour 01</a><br />
+            <select onFocus="focusColour(this, document.getElementById('previousColour01'));" onChange="swapColour(document.getElementById('currentColour01'), this, document.getElementById('previousColour01'));" id="colour01"><option>black</option><option selected>white</option><option>yellow</option><option>red</option><option>blue</option><option>green</option><option>gray</option></select>
+            <input id="currentColour01" value="" size="8" type="hidden" />
+            <input id="previousColour01" value="" size="8" type="hidden" /></p>
+        <p><a href="#" onClick="resetGridWithColour(document.getElementById('colour10'));">Colour 10</a><br />
+            <select onFocus="focusColour(this, document.getElementById('previousColour10'));" onChange="swapColour(document.getElementById('currentColour10'), this, document.getElementById('previousColour10'));" id="colour10"><option>black</option><option>white</option><option selected>yellow</option><option>red</option><option>blue</option><option>green</option><option>gray</option></select>
+            <input id="currentColour10" value="" size="8" type="hidden" />
+            <input id="previousColour10" value="" size="8" type="hidden" /></p>
+        <p><a href="#" onClick="resetGridWithColour(document.getElementById('colour11'));;">Colour 11</a><br />
+            <select onFocus="focusColour(this, document.getElementById('previousColour11'));" onChange="swapColour(document.getElementById('currentColour11'), this, document.getElementById('previousColour11'));" id="colour11"><option>black</option><option>white</option><option>yellow</option><option selected>red</option><option>blue</option><option>green</option><option>gray</option></select>
+            <input id="currentColour11" value="" size="8" type="hidden" />
+            <input id="previousColour11" value="" size="8" type="hidden" /></p>
+    </div>
+    </div>
+
+    <div class="footer">
+        <p>You can see the complete <b>binary data</b> below where we are using <b>two bits</b> for each <b>pixel</b> making <strong>256 bits or 32 bytes</strong> in total.</p>
+        <p><span class="binary" id="fullBinary"></span></p>
+        <p>&nbsp;</p>
+    </div>
+</body>
+</html>
